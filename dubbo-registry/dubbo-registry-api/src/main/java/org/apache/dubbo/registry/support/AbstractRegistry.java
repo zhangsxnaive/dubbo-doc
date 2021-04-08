@@ -98,6 +98,7 @@ public abstract class AbstractRegistry implements Registry {
         if (url.getParameter(REGISTRY__LOCAL_FILE_CACHE_ENABLED, true)) {
             // Start file save timer
             syncSaveFile = url.getParameter(REGISTRY_FILESAVE_SYNC_KEY, false);
+            // 本地缓存
             String defaultFilename = System.getProperty("user.home") + "/.dubbo/dubbo-registry-" + url.getParameter(APPLICATION_KEY) + "-" + url.getAddress().replaceAll(":", "-") + ".cache";
             String filename = url.getParameter(FILE_KEY, defaultFilename);
             File file = null;
@@ -112,6 +113,7 @@ public abstract class AbstractRegistry implements Registry {
             this.file = file;
             // When starting the subscription center,
             // we need to read the local cache file for future Registry fault tolerance processing.
+            // 加载配置文件
             loadProperties();
             notify(url.getBackupUrls());
         }
@@ -170,6 +172,7 @@ public abstract class AbstractRegistry implements Registry {
             return;
         }
         // Save
+        // 保存注册信息缓存文件
         try {
             File lockfile = new File(file.getAbsolutePath() + ".lock");
             if (!lockfile.exists()) {
@@ -429,6 +432,7 @@ public abstract class AbstractRegistry implements Registry {
             listener.notify(categoryList);
             // We will update our cache file after each notification.
             // When our Registry has a subscribe failure due to network jitter, we can return at least the existing cache URL.
+            // 保存配置文件
             saveProperties(url);
         }
     }
@@ -451,6 +455,7 @@ public abstract class AbstractRegistry implements Registry {
                     }
                 }
             }
+            // 根据服务存储
             properties.setProperty(url.getServiceKey(), buf.toString());
             long version = lastCacheChanged.incrementAndGet();
             if (syncSaveFile) {

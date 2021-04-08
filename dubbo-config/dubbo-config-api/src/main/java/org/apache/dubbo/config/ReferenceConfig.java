@@ -106,12 +106,16 @@ public class ReferenceConfig<T> extends ReferenceConfigBase<T> {
      * <p>
      * Actually，when the {@link ExtensionLoader} init the {@link Protocol} instants,it will automatically wraps two
      * layers, and eventually will get a <b>ProtocolFilterWrapper</b> or <b>ProtocolListenerWrapper</b>
+     *
+     * 引用的协议
+     *
      */
     private static final Protocol REF_PROTOCOL = ExtensionLoader.getExtensionLoader(Protocol.class).getAdaptiveExtension();
 
     /**
      * The {@link Cluster}'s implementation with adaptive functionality, and actually it will get a {@link Cluster}'s
      * specific implementation who is wrapped with <b>MockClusterInvoker</b>
+     * 集群容错
      */
     private static final Cluster CLUSTER = ExtensionLoader.getExtensionLoader(Cluster.class).getAdaptiveExtension();
 
@@ -123,6 +127,7 @@ public class ReferenceConfig<T> extends ReferenceConfigBase<T> {
 
     /**
      * The interface proxy reference
+     * 接口的代理对象
      */
     private transient volatile T ref;
 
@@ -305,6 +310,7 @@ public class ReferenceConfig<T> extends ReferenceConfigBase<T> {
 
         serviceMetadata.getAttachments().putAll(map);
 
+        // 创建代理对象
         ref = createProxy(map);
 
         serviceMetadata.setTarget(ref);
@@ -370,6 +376,7 @@ public class ReferenceConfig<T> extends ReferenceConfigBase<T> {
             }
 
             if (urls.size() == 1) {
+                // 获取 Invoke
                 invoker = REF_PROTOCOL.refer(interfaceClass, urls.get(0));
             } else {
                 List<Invoker<?>> invokers = new ArrayList<Invoker<?>>();

@@ -205,12 +205,14 @@ public class RegistryProtocol implements Protocol {
         final ExporterChangeableWrapper<T> exporter = doLocalExport(originInvoker, providerUrl);
 
         // url to registry
+        // 拿到注册中心
         final Registry registry = getRegistry(originInvoker);
         final URL registeredProviderUrl = getUrlToRegistry(providerUrl, registryUrl);
 
         // decide if we need to delay publish
         boolean register = providerUrl.getParameter(REGISTER_KEY, true);
         if (register) {
+            // 注册服务
             registry.register(registeredProviderUrl);
         }
 
@@ -350,6 +352,7 @@ public class RegistryProtocol implements Protocol {
      * @return
      */
     protected Registry getRegistry(final Invoker<?> originInvoker) {
+        // 获取注册中心的地址（如zookeeper://127.0.0.1:2181/）
         URL registryUrl = getRegistryUrl(originInvoker);
         return registryFactory.getRegistry(registryUrl);
     }

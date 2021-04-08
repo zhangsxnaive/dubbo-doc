@@ -52,6 +52,7 @@ public abstract class ServiceConfigBase<T> extends AbstractServiceConfig {
 
     /**
      * The reference of the interface implementation
+     * 对外提供服务的实际类 XxServiceImpl
      */
     protected T ref;
 

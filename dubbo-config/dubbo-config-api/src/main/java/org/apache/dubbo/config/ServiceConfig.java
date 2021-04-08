@@ -116,11 +116,18 @@ public class ServiceConfig<T> extends ServiceConfigBase<T> {
      */
     private static final ScheduledExecutorService DELAY_EXPORT_EXECUTOR = Executors.newSingleThreadScheduledExecutor(new NamedThreadFactory("DubboServiceDelayExporter", true));
 
+    /**
+     * 利用 Protocol 将 Invoker 转成 Exporter 对象
+     * 服务注册时使用RegistryProtocol
+     */
     private static final Protocol PROTOCOL = ExtensionLoader.getExtensionLoader(Protocol.class).getAdaptiveExtension();
 
     /**
      * A {@link ProxyFactory} implementation that will generate a exported service proxy,the JavassistProxyFactory is its
      * default implementation
+     * ProxyFactory 会产生一个对外暴露的服务实现类。
+     * 默认实现是 JavassistProxyFactory
+     *
      */
     private static final ProxyFactory PROXY_FACTORY = ExtensionLoader.getExtensionLoader(ProxyFactory.class).getAdaptiveExtension();
 
@@ -181,6 +188,9 @@ public class ServiceConfig<T> extends ServiceConfigBase<T> {
         dispatch(new ServiceConfigUnexportedEvent(this));
     }
 
+    /**
+     * 暴露服务
+     */
     public synchronized void export() {
         if (bootstrap == null) {
             bootstrap = DubboBootstrap.getInstance();
@@ -488,9 +498,12 @@ public class ServiceConfig<T> extends ServiceConfigBase<T> {
                             registryURL = registryURL.addParameter(PROXY_KEY, proxy);
                         }
 
+                        // 获取 Invoker 对象
                         Invoker<?> invoker = PROXY_FACTORY.getInvoker(ref, (Class) interfaceClass, registryURL.addParameterAndEncoded(EXPORT_KEY, url.toFullString()));
                         DelegateProviderMetaDataInvoker wrapperInvoker = new DelegateProviderMetaDataInvoker(invoker, this);
 
+                        // 将invoker转成 exporter 对象
+                        // 通过不同的协议，通过SPI机制获取不同的协议
                         Exporter<?> exporter = PROTOCOL.export(wrapperInvoker);
                         exporters.add(exporter);
                     }

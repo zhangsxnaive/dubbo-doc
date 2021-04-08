@@ -30,6 +30,7 @@ public interface RegistryFactory {
 
     /**
      * Connect to the registry
+     * 获取到注册中心连接
      * <p>
      * Connecting the registry needs to support the contract: <br>
      * 1. When the check=false is set, the connection is not checked, otherwise the exception is thrown when disconnection <br>
