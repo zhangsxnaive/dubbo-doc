@@ -88,19 +88,26 @@ public class AdaptiveClassCodeGenerator {
      */
     public String generate() {
         // no need to generate adaptive class since there's no adaptive method found.
+        // 如果没有任何方法标记为Adaptive，则不做处理
         if (!hasAdaptiveMethod()) {
             throw new IllegalStateException("No adaptive method exist on extension " + type.getName() + ", refuse to create the adaptive class!");
         }
 
+        // 进行编写代码
         StringBuilder code = new StringBuilder();
+        // 生成包信息
         code.append(generatePackageInfo());
+        // 生成引用信息
         code.append(generateImports());
+        // 生成类声明
         code.append(generateClassDeclaration());
 
+        // 生成方法
         Method[] methods = type.getMethods();
         for (Method method : methods) {
             code.append(generateMethod(method));
         }
+        // 输出最后一个}来结束当前类
         code.append("}");
 
         if (logger.isDebugEnabled()) {

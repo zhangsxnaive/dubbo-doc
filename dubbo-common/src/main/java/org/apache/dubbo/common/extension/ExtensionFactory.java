@@ -18,6 +18,10 @@ package org.apache.dubbo.common.extension;
 
 /**
  * ExtensionFactory
+ *
+ * 根据传入的扩展点类型和名字，获取扩展实现
+ * 和SPI具体名称实现挂钩（adaptive spi spring）
+ *
  */
 @SPI
 public interface ExtensionFactory {
